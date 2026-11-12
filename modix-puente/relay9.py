@@ -95,7 +95,7 @@ class Hub:
         token=self.token(request)
         if not equal(token,self.viewer):return await self.response(request,{'error':'Acceso denegado'},403)
         if len(self.peers)>=8:return await self.response(request,{'error':'Demasiados visores'},429)
-        ws=web.WebSocketResponse(heartbeat=10,max_msg_size=1024,compress=False);await ws.prepare(request);generation=self.session;queue={'state':None,'frame':None,'wake':asyncio.Event()};self.peers[ws]=queue;self.viewed=time.time()
+        ws=web.WebSocketResponse(heartbeat=10,max_msg_size=1024,compress=False);await ws.prepare(request);generation=self.session;queue={'state':None,'frame':None,'wake':asyncio.Event(),'no_jpeg':request.headers.get('X-Modix-Video')=='H264'};self.peers[ws]=queue;self.viewed=time.time()
         if self.state:queue['state']=json.dumps({'type':'state','data':self.state},ensure_ascii=False,allow_nan=False,separators=(',',':'))
         if self.jpeg and time.time()-self.camera_time<3:queue['frame']=self.jpeg
         queue['wake'].set()
