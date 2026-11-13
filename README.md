@@ -1,33 +1,34 @@
-# MODIX BIGMETER V4 · Versión 10 con OBS
+# MODIX BIGMETER V4 · 11 · Multicámara
 
-Aplicaciones de escritorio para supervisar y controlar una Modix con Duet desde la PC principal, y ver su cámara, capas y recorrido desde un cliente de solo lectura.
+Aplicaciones de Windows para controlar la Modix con Duet desde la principal y supervisar video, capas y recorrido desde un cliente de solo lectura.
 
-## Descargar para Windows
+## Descarga directa
 
-No necesitas iniciar sesión en GitHub ni instalar Python. Cierra las versiones anteriores e instala ambas aplicaciones:
+No necesitas una cuenta de GitHub ni instalar Python. Cierra la versión anterior e instala las dos aplicaciones:
 
-- **[Descargar Principal 10](https://github.com/sbarria1209-droid/MODIX-Descargas/releases/download/v10.0.0/MODIX_Principal_10_Instalador.exe)** — en la PC conectada a la cámara USB y a Duet. Incluye OBS portátil.
-- **[Descargar Cliente 10](https://github.com/sbarria1209-droid/MODIX-Descargas/releases/download/v10.0.0/MODIX_Cliente_10_Instalador.exe)** — en la otra PC.
-- [Instrucciones](https://github.com/sbarria1209-droid/MODIX-Descargas/releases/download/v10.0.0/LEEME_PRIMERO.md) · [Pruebas y límites](https://github.com/sbarria1209-droid/MODIX-Descargas/releases/download/v10.0.0/VERIFICACIONES.md) · [SHA256](https://github.com/sbarria1209-droid/MODIX-Descargas/releases/download/v10.0.0/MODIX_10_SHA256.txt).
+- **[Descargar Principal 11](https://github.com/sbarria1209-droid/MODIX-Descargas/releases/download/v11.0.0/MODIX_Principal_11_Instalador.exe)** — PC de la impresora y las cámaras. Incluye OBS portátil.
+- **[Descargar Cliente 11](https://github.com/sbarria1209-droid/MODIX-Descargas/releases/download/v11.0.0/MODIX_Cliente_11_Instalador.exe)** — PC de supervisión.
+- [Calibración y uso](windows11/docs/LEEME_PRIMERO.md) · [Pruebas y límites](windows11/docs/VERIFICACIONES.md) · [SHA256](https://github.com/sbarria1209-droid/MODIX-Descargas/releases/download/v11.0.0/MODIX_11_SHA256.txt).
 
-## Empezar
+## Combinar las cámaras
 
-1. Principal: selecciona la cámara USB física y **Fuente de vídeo: OBS**; pulsa **Activar**. La aplicación prepara y administra una instancia de OBS con perfil propio.
-2. Conecta Duet con su IP y contraseña. Se conservan el historial, la carga automática de archivo activo, las capas, el recorrido, tiempos, luces y alertas.
-3. Abre **Segunda PC → Compartir por Internet** y pega en Cliente 10 el enlace generado. También puedes compartir en la red local.
+Conecta de **2 a 8 cámaras USB** a la principal, una a cada lado y las adicionales desde ángulos útiles. En Cámara elige **Fusión de 2–8 cámaras → Cámaras…**. Selecciona los dispositivos y sigue la calibración con cuatro referencias XY en dos alturas físicas conocidas. Guarda, conecta Duet y pulsa Activar. El cliente recibe **un solo video**, también ampliable.
 
-OBS codifica H.264 mediante GPU cuando es compatible y dispone de alternativa por CPU. El cliente intenta WebRTC directo; si la red lo impide, usa H.264 por HTTPS. La geometría 3D se transmite por separado. Ampliar y pantalla completa usan la misma imagen recibida. La captura USB directa sigue disponible como alternativa.
+La fusión proyecta el plano de la capa y excluye el volumen configurado de brazo/cabezal según Duet para tomar píxeles visibles de otras cámaras. **Requiere calibrar las cámaras reales y ajustar las medidas del brazo.** Las regiones que ninguna cámara ve quedan grises. No se rellena con IA ni con imágenes antiguas, no es una reconstrucción volumétrica y no garantiza retirar toda oclusión. Si faltan imágenes recientes, calibración o posición de Duet, se muestran las vistas disponibles con un aviso.
 
-## Verificación
+OBS comprime H.264 una vez; el cliente intenta WebRTC directo y utiliza el respaldo HTTPS cuando hace falta. El perfil inicial es ligero y permite subir la calidad. Los FPS de OBS pueden incluir repeticiones; el indicador Fusión FPS muestra el procesamiento real. Más cámaras y más resolución requieren más recursos. También siguen disponibles OBS con una sola cámara y USB directa.
 
-70 pruebas de componentes; pruebas nativas Qt/OpenGL; vídeo, modelo, autenticación y revocación. OBS real con GPU Intel y un reloj de ensayo produjo aproximadamente 30 FPS en red local: mediana 290 ms por WebRTC y 233 ms por el respaldo H.264 local. También se probó el codificador por CPU. Son pruebas con fuente sintética y Duet simulado, no medidas de una cámara o impresora física ni una garantía de rendimiento WAN. El enlace real activo no se sustituyó para pruebas.
+## Funciones conservadas
 
-## Datos y límites
+Recorrido de boquilla, capas, descarga del G-code activo, historial, tiempos, luces que informa Duet, alertas y análisis visual de una toma original. Compartir por Internet genera el enlace del visor; cerrarlo revoca el acceso y borra el video del cliente. Las reglas de recuperación comprobada se mantienen: no se ignoran calentadores, paradas ni defectos físicos. M591 dinámico conserva L medido y E informado.
 
-Los instaladores públicos no incluyen credenciales de estación, trabajos, historial ni perfiles o contraseñas privados de OBS. La principal conserva su configuración local existente; una principal en una PC nueva necesita transferir la configuración privada de Internet de forma privada. El cliente solo necesita su enlace de visor.
+## Verificación y datos
 
-Se conserva el plan gratuito del puente y el límite preventivo de 1 GB/mes por instancia. WebRTC directo evita retransmitir el vídeo por Render; el respaldo HTTPS consume ese límite. No se ofrecen datos ilimitados ni se contratan servicios de pago.
+70 pruebas de componentes, 12 comprobaciones nativas y nueve pruebas de fusión. Se probó la señal de dos cámaras simuladas con OBS real y cliente Qt por WebRTC y respaldo H.264, ampliación y revocación. También se simuló geometría de cuatro y ocho cámaras. **No se ensayaron las cámaras físicas de la instalación ni video WAN con el enlace real del usuario.** Consulta el informe para conocer las mediciones y sus límites.
 
-La recuperación de filamento requiere condiciones comprobadas. No omite calentadores, paradas, pausas del operador ni defectos físicos. Los sensores P7 que no informan presencia requieren revisión manual. Se conserva M591 dinámico con L medido y E informado por Duet.
+Los instaladores no incluyen claves de estación, calibraciones personales, imágenes, trabajos ni historial. Una principal en otra PC necesita su configuración privada de Internet por un medio privado. Nunca publiques bridge.json ni estacion_privada.*.
 
-El puente HTTPS se encuentra en `modix-puente/`. OBS y sus componentes conservan sus licencias y enlaces a fuentes oficiales incluidos en la distribución. Proyecto personalizado independiente de Modix, Duet y Canal de Panamá.
+Se conserva el puente y su plan gratuito, con límite preventivo de transferencia. WebRTC directo evita retransmitir el video por Render; el respaldo HTTPS consume ese límite. El puente está en `modix-puente/` y el código nuevo de la aplicación y su compilación en `windows11/`. Las licencias de OBS y bibliotecas se conservan en los instaladores. Proyecto independiente de Modix, Duet y Canal de Panamá.
+
+[Versión 10 anterior](https://github.com/sbarria1209-droid/MODIX-Descargas/releases/tag/v10.0.0).
+
