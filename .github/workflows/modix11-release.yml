@@ -1,0 +1,28 @@
+name: MODIX 11 Windows installers
+on:
+  push:
+    branches: [main]
+    paths: ['windows11/**', '.github/workflows/modix11-release.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows-release:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Build and validate public installers
+        shell: pwsh
+        run: python windows11/build_release.py
+      - name: Publish tested Windows downloads
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create v11.0.0 --target $env:GITHUB_SHA --title "MODIX V4 11 - Multicamara" --notes-file windows11/docs/NOTAS_VERSION.md out/*
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
