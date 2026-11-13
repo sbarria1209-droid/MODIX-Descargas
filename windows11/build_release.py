@@ -35,3 +35,5 @@ for kind,folder,expected in bases:
     reports.append({'app':kind,'file':artifact.name,'bytes':artifact.stat().st_size,'sha256':hashlib.sha256(artifact.read_bytes()).hexdigest(),'source_hashes_match':True,'exact_installer_smoke_passed':True});print(json.dumps(reports[-1]),flush=True)
 for name in ('LEEME_PRIMERO.md','VERIFICACIONES.md'):shutil.copy2(SRC/'docs'/name,OUT/name)
 (OUT/'MODIX_11_SHA256.txt').write_text(''.join(r['sha256']+'  '+r['file']+'\n' for r in reports),encoding='utf-8');(OUT/'BUILD_VERIFICADO.json').write_text(json.dumps(reports,indent=2),encoding='utf-8')
+
+# Source payloads use -text attributes to preserve validated byte hashes on Windows.
